@@ -1,0 +1,144 @@
+---
+title: "HOTEL RESERVATION: CAN YOU PREDICT IF CUSTOMER IS GOING TO CANCEL THE RESERVATION?"
+author: "KANCHARLA NAVEEN KUMAR"
+date: "2023-03-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#DATA PREPARATION
+
+
+```{r}
+df <- read.csv('Hotel Reservations.csv')
+head(df)
+dim(df)
+
+#DISPLAYING THE COLUMN NAMES PRESENT IN THE DATA
+colnames(df)
+
+summary(df)
+
+str(df)
+
+#CHECKING FOR MISSING VALUES
+sum(is.na(df))
+#THE DATA IS CLEAN
+
+#CONVERTING CATEGORICAL VARIABLES INTO FACTORS
+df$type_of_meal_plan <- as.factor(df$type_of_meal_plan)
+df$room_type_reserved <- as.factor(df$room_type_reserved)
+df$market_segment_type <- as.factor(df$market_segment_type)
+df$booking_status <- as.factor(df$booking_status)
+
+
+
+```
+
+
+#DATA EXPLORATION AND VISUALIZATION
+
+
+```{r}
+#LOADING THE NECESSARY PACKAGES
+library(dplyr)
+library(ggplot2)
+
+
+
+#PLOTTING THE BOOKING STATUS
+ggplot(df,aes(x=booking_status))+geom_bar(col="blue1",fill="red")+labs(title="BOOKING STATUS",x="Booking Status",y="Count")
+
+
+#PLOTTING THE LEAD TIME VS BOOKING STATUS
+ggplot(df,aes(x=lead_time,fill=booking_status))+geom_density(alpha=0.5)+labs(title="DENSITY PLOT OF LEAD TIME VS BOOKING STATUS",x="Lead Time",y="Density",fill="Booking Status")
+
+
+#PLOTTING MARKET SEGMENTATION VS BOOKING STATUS
+ggplot(df,aes(x=market_segment_type,fill=booking_status))+geom_bar()+labs(title="BAR PLOT OF MARKET SEGMENTATION VS BOOKING STATUS",y="Count",fill="Booking Status")+theme(axis.text.x=element_text(angle=90, vjust=0.5,hjust=1))
+
+
+#PLOTTING NUMBER OF ADULTS VS AVERAGE PRICE PER ROOM
+ggplot(df,aes(x=no_of_adults,y=avg_price_per_room,color=booking_status))+geom_point()+labs(title="SCATTER PLOT OF NO:OF ADULTS VS PRICE PER ROOM",x="No. of Adults",y="Average Price per Room",color="Booking Status")
+
+
+#PLOTTING NUMBER OF CHILDREN VS AVERAGE PRICE PER ROOM
+ggplot(df,aes(x=no_of_children,y=avg_price_per_room,color=booking_status))+geom_point()+labs(title="SCATTER PLOT OF NO:OF CHILDREN VS PRICE PER ROOM",x="No. of Children",y="Average Price per Room",color="Booking Status")
+
+
+#PLOTTING NUMBER OF WEEKEND NIGHTS VS WEEK NIGHTS
+ggplot(df,aes(x=no_of_weekend_nights,y=no_of_week_nights,color=booking_status))+geom_point()+labs(title="SCATTER PLOT OF WEEKEND NIGHTS VS WEEK NIGHTS",x="No. of Weekend Nights",y="No.of Week Nights",color="Booking Status")
+
+
+#PLOTTING SPECIAL REQUESTS VS AVERAGE PRICE PER ROOM
+ggplot(df,aes(x=no_of_special_requests,y=avg_price_per_room,color=booking_status))+geom_point()+labs(title="SCATTER PLOT OF SPECIAL REQUESTS VS PRICE PER ROOM",x="No. of Special Requests",y="Average Price per Room",color="Booking Status")
+
+
+
+
+```
+
+
+#BUILDING THE DECISION MODEL
+
+
+```{r}
+#LOADING THE REQUIRED PACKAGES
+library(rpart)
+library(rpart.plot)
+library(caret)
+
+#DROPPING THE UNNECESSARY VARIABLES
+df1 <- df[-c(1)]
+df1
+
+#SPLITTING THE DATA INTO TRAINING AND TESTING DATA
+set.seed(1234)
+train_sample <- sample(1:nrow(df1),0.7*nrow(df1))
+train <- df1[train_sample,]
+test <- df1[-train_sample,]
+
+#BUILDING THE DECISION TREE MODEL
+dt_model <- rpart(booking_status ~ .,data=train)
+
+#PLOTTING THE MODEL
+rpart.plot(dt_model)
+
+#MAKING THE PREDICTIONS
+dt_prediction <- predict(dt_model,test)
+head(dt_prediction)
+
+#confusionMatrix(dt_prediction,test$booking_status)
+
+
+```
+
+
+#BUILDING THE LOGISTIC REGRESSION MODEL
+
+
+```{r}
+#LOADING THE REQUIRED PACKAGES
+library(car)
+library(caret)
+
+
+#BUILDING THE MODEL
+glm_model <- glm(booking_status~lead_time+market_segment_type,data=df1,family=binomial)
+summary(glm_model)
+
+#CHECKING FOR MULTICOLLINEARITY
+vif(glm_model)
+
+#PREDICT FOR THE MODEL
+glm_prediction <- predict(glm_model,test)
+head(glm_prediction)
+
+
+```
+
+

@@ -1,0 +1,22 @@
+#DATA PREPARATION
+
+df <- read.csv('Hotel Reservations.csv')
+head(df)
+dim(df)
+
+#DISPLAYING THE COLUMN NAMES PRESENT IN THE DATA
+colnames(df)
+
+summary(df)
+
+str(df)
+
+#CHECKING FOR MISSING VALUES
+sum(is.na(df))
+#THE DATA IS CLEAN
+
+#CONVERTING CATEGORICAL VARIABLES INTO FACTORS
+df$type_of_meal_plan <- as.factor(df$type_of_meal_plan)
+df$room_type_reserved <- as.factor(df$room_type_reserved)
+df$market_segment_type <- as.factor(df$market_segment_type)
+df$booking_status <- as.factor(df$booking_status)

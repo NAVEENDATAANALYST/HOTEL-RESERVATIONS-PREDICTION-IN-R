@@ -1,0 +1,33 @@
+#DATA EXPLORATION AND VISUALIZATION
+
+#LOADING THE NECESSARY PACKAGES
+library(dplyr)
+library(ggplot2)
+
+
+#PLOTTING THE BOOKING STATUS
+ggplot(df,aes(x=booking_status))+geom_bar(col="blue1",fill="red")+labs(title="BOOKING STATUS",x="Booking Status",y="Count")
+
+
+#PLOTTING THE LEAD TIME VS BOOKING STATUS
+ggplot(df,aes(x=lead_time,fill=booking_status))+geom_density(alpha=0.5)+labs(title="DENSITY PLOT OF LEAD TIME VS BOOKING STATUS",x="Lead Time",y="Density",fill="Booking Status")
+
+
+#PLOTTING MARKET SEGMENTATION VS BOOKING STATUS
+ggplot(df,aes(x=market_segment_type,fill=booking_status))+geom_bar()+labs(title="BAR PLOT OF MARKET SEGMENTATION VS BOOKING STATUS",y="Count",fill="Booking Status")+theme(axis.text.x=element_text(angle=90, vjust=0.5,hjust=1))
+
+
+#PLOTTING NUMBER OF ADULTS VS AVERAGE PRICE PER ROOM
+ggplot(df,aes(x=no_of_adults,y=avg_price_per_room,color=booking_status))+geom_point()+labs(title="SCATTER PLOT OF NO:OF ADULTS VS PRICE PER ROOM",x="No. of Adults",y="Average Price per Room",color="Booking Status")
+
+
+#PLOTTING NUMBER OF CHILDREN VS AVERAGE PRICE PER ROOM
+ggplot(df,aes(x=no_of_children,y=avg_price_per_room,color=booking_status))+geom_point()+labs(title="SCATTER PLOT OF NO:OF CHILDREN VS PRICE PER ROOM",x="No. of Children",y="Average Price per Room",color="Booking Status")
+
+
+#PLOTTING NUMBER OF WEEKEND NIGHTS VS WEEK NIGHTS
+ggplot(df,aes(x=no_of_weekend_nights,y=no_of_week_nights,color=booking_status))+geom_point()+labs(title="SCATTER PLOT OF WEEKEND NIGHTS VS WEEK NIGHTS",x="No. of Weekend Nights",y="No.of Week Nights",color="Booking Status")
+
+
+#PLOTTING SPECIAL REQUESTS VS AVERAGE PRICE PER ROOM
+ggplot(df,aes(x=no_of_special_requests,y=avg_price_per_room,color=booking_status))+geom_point()+labs(title="SCATTER PLOT OF SPECIAL REQUESTS VS PRICE PER ROOM",x="No. of Special Requests",y="Average Price per Room",color="Booking Status")

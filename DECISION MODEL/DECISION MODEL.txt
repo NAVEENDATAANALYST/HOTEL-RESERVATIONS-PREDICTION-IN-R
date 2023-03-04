@@ -1,0 +1,28 @@
+#BUILDING THE DECISION MODEL
+
+#LOADING THE REQUIRED PACKAGES
+library(rpart)
+library(rpart.plot)
+library(caret)
+
+#DROPPING THE UNNECESSARY VARIABLES
+df1 <- df[-c(1)]
+df1
+
+#SPLITTING THE DATA INTO TRAINING AND TESTING DATA
+set.seed(1234)
+train_sample <- sample(1:nrow(df1),0.7*nrow(df1))
+train <- df1[train_sample,]
+test <- df1[-train_sample,]
+
+#BUILDING THE DECISION TREE MODEL
+dt_model <- rpart(booking_status ~ .,data=train)
+
+#PLOTTING THE MODEL
+rpart.plot(dt_model)
+
+#MAKING THE PREDICTIONS
+dt_prediction <- predict(dt_model,test)
+head(dt_prediction)
+
+#confusionMatrix(dt_prediction,test$booking_status)

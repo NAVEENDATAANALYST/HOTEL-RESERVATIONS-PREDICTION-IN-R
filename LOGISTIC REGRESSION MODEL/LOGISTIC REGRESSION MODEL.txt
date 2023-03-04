@@ -1,0 +1,17 @@
+#BUILDING THE LOGISTIC REGRESSION MODEL
+
+#LOADING THE REQUIRED PACKAGES
+library(car)
+library(caret)
+
+
+#BUILDING THE MODEL
+glm_model <- glm(booking_status~lead_time+market_segment_type,data=df1,family=binomial)
+summary(glm_model)
+
+#CHECKING FOR MULTICOLLINEARITY
+vif(glm_model)
+
+#PREDICT FOR THE MODEL
+glm_prediction <- predict(glm_model,test)
+head(glm_prediction)
